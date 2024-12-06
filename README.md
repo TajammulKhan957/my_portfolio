@@ -2,7 +2,7 @@
 
 A modern and responsive portfolio template built with React, designed to impress.
 
-### [live preview](tajammulkhan-portfolio.vercel.app)
+### [live preview](https://tajammulkhan-portfolio.vercel.app/)
 
 ### Features
 
