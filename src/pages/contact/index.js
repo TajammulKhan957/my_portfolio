@@ -2,9 +2,21 @@ import React, { useState } from "react";
 import * as emailjs from "emailjs-com";
 import "./style.css";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { meta } from "../../content_option";
-import { Container, Row, Col, Alert } from "react-bootstrap";
-import { contactConfig } from "../../content_option";
+import { motion } from "framer-motion";
+import { meta, contactConfig, socialprofils } from "../../content_option";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { HiOutlineMail } from "react-icons/hi";
+import { BsTelephoneFill } from "react-icons/bs";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: "easeOut" } },
+};
+
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.15 } },
+};
 
 export const ContactUs = () => {
   const [formData, setFormdata] = useState({
@@ -19,7 +31,7 @@ export const ContactUs = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormdata({ loading: true });
+    setFormdata((prev) => ({ ...prev, loading: true }));
 
     const templateParams = {
       from_name: formData.email,
@@ -36,136 +48,205 @@ export const ContactUs = () => {
         contactConfig.YOUR_PUBLIC_KEY
       )
       .then(
-        (result) => {
-          console.log(result.text);
+        () =>
           setFormdata({
+            email: "",
+            name: "",
+            message: "",
             loading: false,
-            alertmessage: "SUCCESS! ,Thank you for your message",
+            alertmessage: "Message sent! I'll get back to you soon.",
             variant: "success",
             show: true,
-          });
-        },
-        (error) => {
-          console.log(error.text);
-          setFormdata({
-            alertmessage: `Faild to send!,${error.text}`,
+          }),
+        (error) =>
+          setFormdata((prev) => ({
+            ...prev,
+            loading: false,
+            alertmessage: `Failed to send: ${error.text}`,
             variant: "danger",
             show: true,
-          });
-          document.getElementsByClassName("co_alert")[0].scrollIntoView();
-        }
+          }))
       );
   };
 
   const handleChange = (e) => {
-    setFormdata({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormdata((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
     <HelmetProvider>
-      <Container>
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>{meta.title} | Contact</title>
-          <meta name="description" content={meta.description} />
-        </Helmet>
-        <Row className="mb-5 mt-3 pt-md-3">
-          <Col lg="8">
-            <h1 className="display-4 mb-4">Contact Me</h1>
-            <hr className="t_border my-4 ml-0 text-left" />
-          </Col>
-        </Row>
-        <Row className="sec_sp">
-          <Col lg="12">
-            <Alert
-              //show={formData.show}
-              variant={formData.variant}
-              className={`rounded-0 co_alert ${
-                formData.show ? "d-block" : "d-none"
-              }`}
-              onClose={() => setFormdata({ show: false })}
-              dismissible
-            >
-              <p className="my-0">{formData.alertmessage}</p>
-            </Alert>
-          </Col>
-          <Col lg="5" className="mb-5">
-            <h3 className="color_sec py-4">Get in touch</h3>
-            <address>
-              <strong>Email:</strong>{" "}
-              <a href={`mailto:${contactConfig.YOUR_EMAIL}`}>
-                {contactConfig.YOUR_EMAIL}
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Contact | {meta.title}</title>
+        <meta name="description" content={meta.description} />
+      </Helmet>
+
+      <div className="contact-page">
+        {/* ── Page hero ── */}
+        <motion.div
+          className="page-hero"
+          initial="hidden"
+          animate="show"
+          variants={stagger}
+        >
+          <motion.span className="section-label" variants={fadeUp}>
+            — Get In Touch
+          </motion.span>
+          <motion.h1 className="page-hero__title" variants={fadeUp}>
+            Let's build something<br />together.
+          </motion.h1>
+        </motion.div>
+
+        {/* ── Grid ── */}
+        <div className="contact-grid">
+          {/* Info column */}
+          <motion.div
+            className="contact-info"
+            initial="hidden"
+            animate="show"
+            variants={stagger}
+          >
+            <motion.div className="avail-badge" variants={fadeUp}>
+              <span className="avail-dot" aria-hidden="true" />
+              Available for full-time roles
+            </motion.div>
+
+            <motion.p className="contact-desc" variants={fadeUp}>
+              {contactConfig.description}
+            </motion.p>
+
+            <motion.div className="contact-details" variants={fadeUp}>
+              <button
+                className="contact-detail glass-card contact-detail--btn"
+                onClick={() => window.open(`mailto:${contactConfig.YOUR_EMAIL}`, "_self")}
+                aria-label={`Send email to ${contactConfig.YOUR_EMAIL}`}
+              >
+                <HiOutlineMail className="detail-icon" aria-hidden="true" />
+                <div>
+                  <span className="detail-label mono">Email</span>
+                  <span className="detail-value">{contactConfig.YOUR_EMAIL}</span>
+                </div>
+              </button>
+
+              <div className="contact-detail glass-card">
+                <BsTelephoneFill className="detail-icon" aria-hidden="true" />
+                <div>
+                  <span className="detail-label mono">Phone</span>
+                  <span className="detail-value">{contactConfig.YOUR_FONE}</span>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div className="contact-socials" variants={fadeUp}>
+              <a
+                href={socialprofils.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn glass-card"
+              >
+                <FaGithub aria-hidden="true" /> GitHub
               </a>
-              <br />
-              <br />
-              {contactConfig.hasOwnProperty("YOUR_FONE") ? (
-                <p>
-                  <strong>Phone:</strong> {contactConfig.YOUR_FONE}
-                </p>
-              ) : (
-                ""
-              )}
-            </address>
-            <p>{contactConfig.description}</p>
-          </Col>
-          <Col lg="7" className="d-flex align-items-center">
-            <form onSubmit={handleSubmit} className="contact__form w-100">
-              <Row>
-                <Col lg="6" className="form-group">
+              <a
+                href={socialprofils.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn glass-card"
+              >
+                <FaLinkedin aria-hidden="true" /> LinkedIn
+              </a>
+            </motion.div>
+          </motion.div>
+
+          {/* Form column */}
+          <motion.div
+            className="contact-form-wrap glass-card"
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+          >
+            {formData.show && (
+              <div className={`form-alert form-alert--${formData.variant}`}>
+                <span>{formData.alertmessage}</span>
+                <button
+                  onClick={() => setFormdata((prev) => ({ ...prev, show: false }))}
+                  className="alert-close"
+                  aria-label="Dismiss"
+                >
+                  ×
+                </button>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="contact-form" noValidate>
+              <div className="form-row">
+                <div className="form-field">
+                  <label htmlFor="name" className="mono">Name</label>
                   <input
-                    className="form-control"
                     id="name"
                     name="name"
-                    placeholder="Name"
-                    value={formData.name || ""}
                     type="text"
-                    required
+                    placeholder="Your name"
+                    value={formData.name}
                     onChange={handleChange}
+                    required
                   />
-                </Col>
-                <Col lg="6" className="form-group">
+                </div>
+                <div className="form-field">
+                  <label htmlFor="email" className="mono">Email</label>
                   <input
-                    className="form-control rounded-0"
                     id="email"
                     name="email"
-                    placeholder="Email"
                     type="email"
-                    value={formData.email || ""}
-                    required
+                    placeholder="your@email.com"
+                    value={formData.email}
                     onChange={handleChange}
+                    required
                   />
-                </Col>
-              </Row>
-              <textarea
-                className="form-control rounded-0"
-                id="message"
-                name="message"
-                placeholder="Message"
-                rows="5"
-                value={formData.message}
-                onChange={handleChange}
-                required
-              ></textarea>
-              <br />
-              <Row>
-                <Col lg="12" className="form-group">
-                  <button className="btn ac_btn" type="submit">
-                    {formData.loading ? "Sending..." : "Send"}
-                  </button>
-                </Col>
-              </Row>
+                </div>
+              </div>
+
+              <div className="form-field">
+                <label htmlFor="message" className="mono">Message</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  placeholder="Tell me about your project or role..."
+                  rows={6}
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn-primary-pill form-submit"
+                disabled={formData.loading}
+              >
+                {formData.loading ? "Sending…" : "Send Message →"}
+              </button>
             </form>
-          </Col>
-        </Row>
-      </Container>
-      <div className={formData.loading ? "loading-bar" : "d-none"}></div>
+          </motion.div>
+        </div>
+
+        {/* ── Footer ── */}
+        <motion.footer
+          className="site-footer"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+        >
+          <p className="mono">
+            Designed &amp; built by Tajammul Khan · {new Date().getFullYear()}
+          </p>
+          <div className="footer-links">
+            <a href={socialprofils.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href={socialprofils.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </div>
+        </motion.footer>
+      </div>
+
+      {formData.loading && <div className="loading-bar" aria-hidden="true" />}
     </HelmetProvider>
   );
 };
-
-
-
-

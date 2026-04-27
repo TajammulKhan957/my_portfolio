@@ -1,20 +1,22 @@
-@media only screen and (max-width: 991px) {
-    .s_c {
-        padding-top: 40px;
-    }
+.s_c {
+    position: relative;
 }
 
+/* Page transition — subtle fade + lift */
 .page-enter {
-    transform: translateY(100%);
+    opacity: 0;
+    transform: translateY(18px);
 }
 
 .page-enter-active {
-    transform: translateY(0%);
-    transition: all 400ms ease-out;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 350ms ease-out, transform 350ms ease-out;
 }
 
 .page-exit {
-    transform: translateY(0%);
+    opacity: 1;
+    transform: translateY(0);
     position: absolute;
     left: 0;
     right: 0;
@@ -22,12 +24,13 @@
 }
 
 .page-exit-active {
+    opacity: 0;
+    transform: translateY(-14px);
+    transition: opacity 350ms ease-out, transform 350ms ease-out;
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
-    transform: translateY(-130%);
-    transition: all 400ms ease-out;
 }
 
 @media (min-width: 1400px) {
@@ -37,6 +40,6 @@
     .container-sm,
     .container-xl,
     .container-xxl {
-        max-width: 1140px;
+        max-width: 1200px;
     }
 }

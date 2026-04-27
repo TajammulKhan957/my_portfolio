@@ -1,70 +1,98 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./style.css";
-import { VscGrabber, VscClose } from "react-icons/vsc";
-import { Link } from "react-router-dom";
-import { logotext ,socialprofils } from "../content_option";
+import { VscClose, VscGrabber } from "react-icons/vsc";
+import { Link, useLocation } from "react-router-dom";
+import { logotext, socialprofils } from "../content_option";
 import Themetoggle from "../components/themetoggle";
 
+const navLinks = [
+  { to: "/", label: "Home" },
+  { to: "/about", label: "About" },
+  { to: "/portfolio", label: "Work" },
+  { to: "/contact", label: "Contact" },
+];
+
 const Headermain = () => {
-  const [isActive, setActive] = useState("false");
+  const [isActive, setActive] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 24);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setActive(false);
+    document.body.classList.remove("ovhidden");
+  }, [location]);
 
   const handleToggle = () => {
-    setActive(!isActive);
-    document.body.classList.toggle("ovhidden");
+    const next = !isActive;
+    setActive(next);
+    document.body.classList.toggle("ovhidden", next);
   };
 
   return (
     <>
-      <header className="fixed-top site__header">
-        <div className="d-flex align-items-center justify-content-between">
-          <Link  className="navbar-brand nav_ac" to="/">
-            {logotext}
+      <header className={`site__header ${scrolled ? "scrolled" : ""}`}>
+        <div className="header__inner">
+          <Link className="header__logo" to="/">
+            {logotext}<span className="logo-dot">.</span>
           </Link>
-          <div className="d-flex align-items-center">
-          <Themetoggle />
-          <button className="menu__button  nav_ac" onClick={handleToggle}>
-            {!isActive ? <VscClose /> : <VscGrabber />}
-          </button>
-          
-          </div>
-        </div>
 
-        <div className={`site__navigation ${!isActive ? "menu__opend" : ""}`}>
-          <div className="bg__menu h-100">
-            <div className="menu__wrapper">
-              <div className="menu__container p-3">
-                <ul className="the_menu">
-                  <li className="menu_item ">
-                  <Link  onClick={handleToggle} to="/" className="my-3">Home</Link>
-                  </li>
-                  <li className="menu_item">
-                    <Link  onClick={handleToggle} to="/portfolio" className="my-3"> Portfolio</Link>
-                  </li>
-                  <li className="menu_item">
-                  <Link onClick={handleToggle} to="/about" className="my-3">About</Link>
-                  </li>
-                  <li className="menu_item">
-                  <Link onClick={handleToggle} to="/contact" className="my-3"> Contact</Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div className="menu_footer d-flex flex-column flex-md-row justify-content-between align-items-md-center position-absolute w-100 p-3">
-            <div className="d-flex">
-            <a href={socialprofils.facebook}>Facebook</a>
-            <a href={socialprofils.github}>Github</a>
-            <a href={socialprofils.twitter}>Twitter</a>
-            </div>
-            <p className="copyright m-0">copyright __ {logotext}</p>
+          <nav className="header__nav" aria-label="Main navigation">
+            {navLinks.map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                className={`nav__link ${location.pathname === to ? "active" : ""}`}
+              >
+                {label}
+              </Link>
+            ))}
+            <Themetoggle />
+            <Link to="/contact" className="nav__cta">
+              Hire Me
+            </Link>
+          </nav>
+
+          <div className="header__mobile-controls">
+            <Themetoggle />
+            <button
+              className="menu__button"
+              onClick={handleToggle}
+              aria-label={isActive ? "Close menu" : "Open menu"}
+            >
+              {isActive ? <VscClose /> : <VscGrabber />}
+            </button>
           </div>
         </div>
       </header>
-      <div className="br-top"></div>
-      <div className="br-bottom"></div>
-      <div className="br-left"></div>
-      <div className="br-right"></div>
-      
+
+      <div className={`mobile__menu ${isActive ? "open" : ""}`}>
+        <nav className="mobile__nav" aria-label="Mobile navigation">
+          {navLinks.map(({ to, label }) => (
+            <Link
+              key={to}
+              to={to}
+              className={`mobile__link ${location.pathname === to ? "active" : ""}`}
+              onClick={handleToggle}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
+        <div className="mobile__footer">
+          <a href={socialprofils.github} target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+          <a href={socialprofils.linkedin} target="_blank" rel="noopener noreferrer">
+            LinkedIn
+          </a>
+        </div>
+      </div>
     </>
   );
 };
