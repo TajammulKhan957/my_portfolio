@@ -87,6 +87,9 @@
 }
 
 .nav__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     padding: 0.5rem 1.25rem;
     background: var(--gradient);
     border-radius: var(--radius-pill);
@@ -94,12 +97,14 @@
     font-weight: 600;
     color: #fff !important;
     text-decoration: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.25);
 }
 
 .nav__cta:hover {
-    opacity: 0.85;
+    opacity: 0.88;
     transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(124, 58, 237, 0.35);
 }
 
 /* Mobile controls group (toggle + burger) */
@@ -180,7 +185,10 @@
 
 .mobile__footer {
     display: flex;
-    gap: 2rem;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .mobile__footer a {
@@ -193,6 +201,25 @@
 
 .mobile__footer a:hover {
     color: var(--text);
+}
+
+.mobile__resume-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.25rem;
+    background: var(--gradient);
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #fff !important;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.mobile__resume-btn:hover {
+    opacity: 0.88;
+    color: #fff;
 }
 
 /* Breakpoint */

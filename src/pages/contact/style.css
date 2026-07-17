@@ -7,10 +7,10 @@
 /* ── Two-column grid ── */
 .contact-grid {
     display: grid;
-    grid-template-columns: 1fr 1.55fr;
+    grid-template-columns: 1fr 1.6fr;
     gap: 3rem;
     align-items: start;
-    margin-bottom: 5rem;
+    margin-bottom: 2.5rem;
 }
 
 /* ── Availability badge ── */
@@ -19,7 +19,7 @@
     align-items: center;
     gap: 0.55rem;
     padding: 0.4rem 1rem;
-    background: rgba(34, 197, 94, 0.08);
+    background: rgba(34, 197, 94, 0.07);
     border: 1px solid rgba(34, 197, 94, 0.22);
     border-radius: var(--radius-pill);
     font-size: 0.8rem;
@@ -44,7 +44,7 @@
 
 .contact-desc {
     font-size: 0.95rem;
-    line-height: 1.8;
+    line-height: 1.82;
     color: var(--text-2);
     margin-bottom: 2rem;
 }
@@ -62,34 +62,32 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem 1.25rem;
-    text-decoration: none;
-    transition: border-color 0.2s ease, transform 0.2s ease;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .contact-detail:hover {
     border-color: var(--border-hover);
     transform: translateX(4px);
-}
-
-.contact-detail--btn {
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    font-family: var(--font-body);
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.06);
 }
 
 .detail-icon {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     color: var(--accent-2);
     flex-shrink: 0;
 }
 
+.detail-text {
+    flex: 1;
+    min-width: 0;
+}
+
 .detail-label {
     display: block;
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     color: var(--text-3);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     margin-bottom: 0.2rem;
 }
 
@@ -97,6 +95,45 @@
     display: block;
     font-size: 0.9rem;
     color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ── Copy email button ── */
+.copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    color: var(--text-2);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.copy-btn:hover {
+    color: var(--text);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.copy-btn--copied {
+    color: #4ADE80;
+    border-color: rgba(34, 197, 94, 0.4);
+    background: rgba(34, 197, 94, 0.07);
+}
+
+.copy-btn--copied:hover {
+    color: #4ADE80;
+    border-color: rgba(34, 197, 94, 0.4);
+    background: rgba(34, 197, 94, 0.07);
 }
 
 /* ── Social buttons ── */
@@ -110,18 +147,19 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.6rem 1.2rem;
+    padding: 0.65rem 1.25rem;
     font-size: 0.85rem;
     font-weight: 500;
     color: var(--text-2);
     text-decoration: none;
     border-radius: var(--radius-pill);
-    transition: color 0.2s, border-color 0.2s;
+    transition: color 0.2s, border-color 0.2s, transform 0.2s;
 }
 
 .social-btn:hover {
     color: var(--text);
     border-color: var(--accent);
+    transform: translateY(-2px);
 }
 
 /* ── Form ── */
@@ -141,13 +179,13 @@
 }
 
 .form-alert--success {
-    background: rgba(34, 197, 94, 0.08);
+    background: rgba(34, 197, 94, 0.07);
     border: 1px solid rgba(34, 197, 94, 0.25);
     color: #4ADE80;
 }
 
 .form-alert--danger {
-    background: rgba(239, 68, 68, 0.08);
+    background: rgba(239, 68, 68, 0.07);
     border: 1px solid rgba(239, 68, 68, 0.25);
     color: #F87171;
 }
@@ -182,7 +220,7 @@
 }
 
 .form-field label {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: var(--text-3);
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -190,7 +228,7 @@
 
 .form-field input,
 .form-field textarea {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 0.875rem 1rem;
@@ -199,7 +237,7 @@
     font-size: 0.9rem;
     outline: none;
     resize: vertical;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     width: 100%;
 }
 
@@ -212,16 +250,73 @@
 .form-field textarea:focus {
     border-color: var(--accent);
     background: rgba(124, 58, 237, 0.04);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
 .form-submit {
     width: 100%;
+    justify-content: center;
 }
 
 .form-submit:disabled {
     opacity: 0.55;
     cursor: not-allowed;
     transform: none !important;
+}
+
+/* ── Resume Strip ── */
+.contact-resume {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem 2rem;
+    margin-bottom: 3rem;
+    border-color: rgba(124, 58, 237, 0.18);
+    background: rgba(124, 58, 237, 0.03);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.contact-resume:hover {
+    border-color: rgba(124, 58, 237, 0.35);
+    box-shadow: 0 8px 32px rgba(124, 58, 237, 0.08);
+    transform: translateY(-2px);
+}
+
+.contact-resume__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--accent-soft);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.contact-resume__text { flex: 1; }
+
+.contact-resume__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 0.25rem;
+}
+
+.contact-resume__sub {
+    font-size: 0.72rem;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+}
+
+.contact-resume__actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
 }
 
 /* ── Footer ── */
@@ -269,13 +364,32 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .contact-grid {
         grid-template-columns: 1fr;
     }
 
+    .contact-resume {
+        flex-wrap: wrap;
+    }
+
+    .contact-resume__actions {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
     .form-row {
         grid-template-columns: 1fr;
+    }
+
+    .contact-resume__actions {
+        flex-direction: column;
+    }
+
+    .contact-resume__actions .btn-primary-pill,
+    .contact-resume__actions .btn-ghost-pill {
+        justify-content: center;
     }
 
     .site-footer {

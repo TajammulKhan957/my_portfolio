@@ -7,6 +7,14 @@ import { meta, contactConfig, socialprofils } from "../../content_option";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { BsTelephoneFill } from "react-icons/bs";
+import {
+  FiMapPin,
+  FiCopy,
+  FiCheck,
+  FiDownload,
+  FiEye,
+  FiFileText,
+} from "react-icons/fi";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -28,6 +36,7 @@ export const ContactUs = () => {
     alertmessage: "",
     variant: "",
   });
+  const [copied, setCopied] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,7 +63,7 @@ export const ContactUs = () => {
             name: "",
             message: "",
             loading: false,
-            alertmessage: "Message sent! I'll get back to you soon.",
+            alertmessage: "Message sent! I'll get back to you within 24 hours.",
             variant: "success",
             show: true,
           }),
@@ -71,6 +80,19 @@ export const ContactUs = () => {
 
   const handleChange = (e) => {
     setFormdata((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleCopyEmail = () => {
+    navigator.clipboard
+      .writeText(contactConfig.YOUR_EMAIL)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      })
+      .catch(() => {
+        /* fallback: open mail client */
+        window.open(`mailto:${contactConfig.YOUR_EMAIL}`, "_self");
+      });
   };
 
   return (
@@ -93,13 +115,13 @@ export const ContactUs = () => {
             — Get In Touch
           </motion.span>
           <motion.h1 className="page-hero__title" variants={fadeUp}>
-            Let's build something<br />together.
+            Let's build something<br />remarkable together.
           </motion.h1>
         </motion.div>
 
-        {/* ── Grid ── */}
+        {/* ── Two-column grid ── */}
         <div className="contact-grid">
-          {/* Info column */}
+          {/* ── Info column ── */}
           <motion.div
             className="contact-info"
             initial="hidden"
@@ -115,34 +137,53 @@ export const ContactUs = () => {
               {contactConfig.description}
             </motion.p>
 
+            {/* Contact details */}
             <motion.div className="contact-details" variants={fadeUp}>
-              <button
-                className="contact-detail glass-card contact-detail--btn"
-                onClick={() => window.open(`mailto:${contactConfig.YOUR_EMAIL}`, "_self")}
-                aria-label={`Send email to ${contactConfig.YOUR_EMAIL}`}
-              >
+              {/* Email with copy button */}
+              <div className="contact-detail glass-card">
                 <HiOutlineMail className="detail-icon" aria-hidden="true" />
-                <div>
+                <div className="detail-text">
                   <span className="detail-label mono">Email</span>
                   <span className="detail-value">{contactConfig.YOUR_EMAIL}</span>
                 </div>
-              </button>
+                <button
+                  className={`copy-btn ${copied ? "copy-btn--copied" : ""}`}
+                  onClick={handleCopyEmail}
+                  aria-label={copied ? "Email copied!" : "Copy email address"}
+                  title={copied ? "Copied!" : "Copy email"}
+                >
+                  {copied ? <FiCheck /> : <FiCopy />}
+                  <span className="mono">{copied ? "Copied!" : "Copy"}</span>
+                </button>
+              </div>
 
+              {/* Phone */}
               <div className="contact-detail glass-card">
                 <BsTelephoneFill className="detail-icon" aria-hidden="true" />
-                <div>
+                <div className="detail-text">
                   <span className="detail-label mono">Phone</span>
                   <span className="detail-value">{contactConfig.YOUR_FONE}</span>
                 </div>
               </div>
+
+              {/* Location */}
+              <div className="contact-detail glass-card">
+                <FiMapPin className="detail-icon" aria-hidden="true" />
+                <div className="detail-text">
+                  <span className="detail-label mono">Location</span>
+                  <span className="detail-value">{contactConfig.YOUR_LOCATION}</span>
+                </div>
+              </div>
             </motion.div>
 
+            {/* Social links */}
             <motion.div className="contact-socials" variants={fadeUp}>
               <a
                 href={socialprofils.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="social-btn glass-card"
+                aria-label="Visit GitHub profile"
               >
                 <FaGithub aria-hidden="true" /> GitHub
               </a>
@@ -151,13 +192,14 @@ export const ContactUs = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="social-btn glass-card"
+                aria-label="Visit LinkedIn profile"
               >
                 <FaLinkedin aria-hidden="true" /> LinkedIn
               </a>
             </motion.div>
           </motion.div>
 
-          {/* Form column */}
+          {/* ── Form column ── */}
           <motion.div
             className="contact-form-wrap glass-card"
             initial={{ opacity: 0, y: 28 }}
@@ -165,12 +207,12 @@ export const ContactUs = () => {
             transition={{ duration: 0.6, delay: 0.25 }}
           >
             {formData.show && (
-              <div className={`form-alert form-alert--${formData.variant}`}>
+              <div className={`form-alert form-alert--${formData.variant}`} role="alert">
                 <span>{formData.alertmessage}</span>
                 <button
                   onClick={() => setFormdata((prev) => ({ ...prev, show: false }))}
                   className="alert-close"
-                  aria-label="Dismiss"
+                  aria-label="Dismiss alert"
                 >
                   ×
                 </button>
@@ -185,10 +227,11 @@ export const ContactUs = () => {
                     id="name"
                     name="name"
                     type="text"
-                    placeholder="Your name"
+                    placeholder="Your full name"
                     value={formData.name}
                     onChange={handleChange}
                     required
+                    autoComplete="name"
                   />
                 </div>
                 <div className="form-field">
@@ -201,6 +244,7 @@ export const ContactUs = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
+                    autoComplete="email"
                   />
                 </div>
               </div>
@@ -210,7 +254,7 @@ export const ContactUs = () => {
                 <textarea
                   id="message"
                   name="message"
-                  placeholder="Tell me about your project or role..."
+                  placeholder="Tell me about your project, role, or just say hello..."
                   rows={6}
                   value={formData.message}
                   onChange={handleChange}
@@ -229,6 +273,44 @@ export const ContactUs = () => {
           </motion.div>
         </div>
 
+        {/* ── Resume Download Strip ── */}
+        <motion.div
+          className="contact-resume glass-card"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.55 }}
+        >
+          <div className="contact-resume__icon" aria-hidden="true">
+            <FiFileText />
+          </div>
+          <div className="contact-resume__text">
+            <h3 className="contact-resume__title">Resume Available</h3>
+            <p className="contact-resume__sub mono">Full-Stack Engineer · React · Node.js · FastAPI · AI/LLM · 3 Years</p>
+          </div>
+          <div className="contact-resume__actions">
+            <a
+              href="/Tajammul_Khan_Resume.pdf"
+              download="Tajammul_Khan_Resume.pdf"
+              className="btn-primary-pill"
+              aria-label="Download Tajammul's resume"
+            >
+              <FiDownload aria-hidden="true" />
+              Download
+            </a>
+            <a
+              href="/Tajammul_Khan_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost-pill"
+              aria-label="View Tajammul's resume online"
+            >
+              <FiEye aria-hidden="true" />
+              View
+            </a>
+          </div>
+        </motion.div>
+
         {/* ── Footer ── */}
         <motion.footer
           className="site-footer"
@@ -242,6 +324,7 @@ export const ContactUs = () => {
           <div className="footer-links">
             <a href={socialprofils.github} target="_blank" rel="noopener noreferrer">GitHub</a>
             <a href={socialprofils.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href={`mailto:${contactConfig.YOUR_EMAIL}`}>Email</a>
           </div>
         </motion.footer>
       </div>

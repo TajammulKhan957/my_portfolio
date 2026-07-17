@@ -4,12 +4,14 @@ import { VscClose, VscGrabber } from "react-icons/vsc";
 import { Link, useLocation } from "react-router-dom";
 import { logotext, socialprofils } from "../content_option";
 import Themetoggle from "../components/themetoggle";
+import { FiDownload } from "react-icons/fi";
 
 const navLinks = [
-  { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
+  { to: "/",         label: "Home" },
+  { to: "/about",    label: "About" },
   { to: "/portfolio", label: "Work" },
-  { to: "/contact", label: "Contact" },
+  { to: "/resume",   label: "Resume" },
+  { to: "/contact",  label: "Contact" },
 ];
 
 const Headermain = () => {
@@ -38,7 +40,7 @@ const Headermain = () => {
     <>
       <header className={`site__header ${scrolled ? "scrolled" : ""}`}>
         <div className="header__inner">
-          <Link className="header__logo" to="/">
+          <Link className="header__logo" to="/" aria-label="Tajammul Khan — home">
             {logotext}<span className="logo-dot">.</span>
           </Link>
 
@@ -53,9 +55,15 @@ const Headermain = () => {
               </Link>
             ))}
             <Themetoggle />
-            <Link to="/contact" className="nav__cta">
+            <a
+              href="/Tajammul_Khan_Resume.pdf"
+              download="Tajammul_Khan_Resume.pdf"
+              className="nav__cta"
+              aria-label="Download Resume"
+            >
+              <FiDownload aria-hidden="true" />
               Hire Me
-            </Link>
+            </a>
           </nav>
 
           <div className="header__mobile-controls">
@@ -63,7 +71,8 @@ const Headermain = () => {
             <button
               className="menu__button"
               onClick={handleToggle}
-              aria-label={isActive ? "Close menu" : "Open menu"}
+              aria-label={isActive ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isActive}
             >
               {isActive ? <VscClose /> : <VscGrabber />}
             </button>
@@ -71,7 +80,10 @@ const Headermain = () => {
         </div>
       </header>
 
-      <div className={`mobile__menu ${isActive ? "open" : ""}`}>
+      <div
+        className={`mobile__menu ${isActive ? "open" : ""}`}
+        aria-hidden={!isActive}
+      >
         <nav className="mobile__nav" aria-label="Mobile navigation">
           {navLinks.map(({ to, label }) => (
             <Link
@@ -90,6 +102,14 @@ const Headermain = () => {
           </a>
           <a href={socialprofils.linkedin} target="_blank" rel="noopener noreferrer">
             LinkedIn
+          </a>
+          <a
+            href="/Tajammul_Khan_Resume.pdf"
+            download="Tajammul_Khan_Resume.pdf"
+            className="mobile__resume-btn"
+          >
+            <FiDownload aria-hidden="true" />
+            Download Resume
           </a>
         </div>
       </div>

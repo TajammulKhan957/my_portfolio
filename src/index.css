@@ -213,3 +213,71 @@ p { margin: 0; }
 
 /* Bootstrap overrides */
 .table td, .table th { color: var(--text); }
+
+/* ── Page hero shared sub ── */
+.page-hero {
+    padding: 4rem 0 3rem;
+    max-width: 840px;
+}
+
+/* ── Scroll margin for anchors ── */
+[id] { scroll-margin-top: 88px; }
+
+/* ── Focus ring (accessibility) ── */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* ── Selection ── */
+::selection {
+    background: rgba(124, 58, 237, 0.25);
+    color: var(--text);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ── Smooth image rendering ── */
+img {
+    image-rendering: -webkit-optimize-contrast;
+}
+
+/* ── Scrollbar styling ── */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(124, 58, 237, 0.4);
+}
+
+/* ── Light mode page-hero fix ── */
+[data-theme="light"] .page-hero__title {
+    background: linear-gradient(135deg, #0F172A 20%, #475569 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/* ── Light mode section heading fix ── */
+[data-theme="light"] .section-heading {
+    background: linear-gradient(135deg, #0F172A 0%, #475569 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+}

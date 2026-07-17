@@ -1,8 +1,28 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import "./style.css";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { motion } from "framer-motion";
-import { dataabout, meta, worktimeline, services } from "../../content_option";
+import { motion, useInView } from "framer-motion";
+import {
+  dataabout,
+  meta,
+  worktimeline,
+  services,
+  techstack,
+} from "../../content_option";
+import {
+  FiCode,
+  FiLayout,
+  FiDatabase,
+  FiCpu,
+  FiServer,
+  FiZap,
+  FiDownload,
+  FiEye,
+  FiAward,
+  FiCheck,
+  FiTool,
+  FiGlobe,
+} from "react-icons/fi";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -14,38 +34,53 @@ const stagger = {
   show: { transition: { staggerChildren: 0.1 } },
 };
 
-const stats = [
-  { value: "2+",   label: "Years Exp." },
-  { value: "10M+", label: "Users Reached" },
-  { value: "4",    label: "Key Projects" },
-  { value: "Open", label: "To Work" },
+const categoryIconMap = {
+  "Frontend":           FiCode,
+  "Styling":            FiLayout,
+  "Backend":            FiCpu,
+  "AI & LLM":           FiGlobe,
+  "Databases":          FiDatabase,
+  "Cloud & DevOps":     FiServer,
+  "Tools & Practices":  FiTool,
+  "Currently Learning": FiZap,
+};
+
+const statsData = [
+  { end: 3,    suffix: "",    label: "Years Experience" },
+  { end: 10,   suffix: "M+",  label: "Users Reached" },
+  { end: 4,    suffix: "",    label: "Enterprise Projects" },
+  { end: 90,   suffix: "+",   label: "Lighthouse Score" },
+  { end: 25,   suffix: "+",   label: "Technologies" },
 ];
 
-const skillCategories = [
-  {
-    label: "Frontend",
-    items: ["React.js", "Next.js 13", "Angular 14+", "TypeScript", "JavaScript ES6+"],
-  },
-  {
-    label: "Styling",
-    items: ["Tailwind CSS", "Material-UI", "Styled Components", "SASS/SCSS", "Responsive Design"],
-  },
-  {
-    label: "State & Data",
-    items: ["Redux Toolkit", "Context API", "React Hook Form", "Recharts", "Chart.js", "ApexCharts"],
-  },
-  {
-    label: "Tools & Backend",
-    items: ["Node.js", "Express.js", "Git", "Docker", "AWS", "MySQL", "Firebase", "CI/CD"],
-  },
-  {
-    label: "Currently Learning",
-    items: ["GraphQL", "Three.js", "Micro-frontends"],
-    highlight: true,
-  },
-];
+function AnimatedCounter({ end, suffix, trigger }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!trigger) return;
+    const duration = 1600;
+    const start = performance.now();
+    const tick = (now) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.round(eased * end));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [trigger, end]);
+
+  return (
+    <span className="stat-value gradient-text">
+      {count}{suffix}
+    </span>
+  );
+}
 
 export const About = () => {
+  const statsRef = useRef(null);
+  const statsInView = useInView(statsRef, { once: true, margin: "-50px" });
+
   return (
     <HelmetProvider>
       <Helmet>
@@ -84,21 +119,22 @@ export const About = () => {
 
           <motion.div
             className="about-stats"
+            ref={statsRef}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-60px" }}
             variants={stagger}
           >
-            {stats.map(({ value, label }) => (
+            {statsData.map(({ end, suffix, label }) => (
               <motion.div key={label} className="stat-card glass-card" variants={fadeUp}>
-                <span className="stat-value gradient-text">{value}</span>
+                <AnimatedCounter end={end} suffix={suffix} trigger={statsInView} />
                 <span className="stat-label mono">{label}</span>
               </motion.div>
             ))}
           </motion.div>
         </section>
 
-        {/* ── Experience ── */}
+        {/* ── Experience Timeline ── */}
         <section className="about-section">
           <motion.h2
             className="section-heading"
@@ -122,13 +158,97 @@ export const About = () => {
                 <div className="timeline-dot" aria-hidden="true" />
                 <div className="timeline-body">
                   <div className="timeline-header">
-                    <h3>{item.jobtitle}</h3>
-                    <span className="timeline-date mono">{item.date}</span>
+                    <div>
+                      <h3>{item.jobtitle}</h3>
+                      <p className="timeline-where">
+                        {item.where} · {item.location}
+                      </p>
+                    </div>
+                    <div className="timeline-meta">
+                      <span className="timeline-date mono">{item.date}</span>
+                      <span className="timeline-type mono">{item.type}</span>
+                    </div>
                   </div>
-                  <p className="timeline-where">{item.where}</p>
+
+                  {item.achievements && (
+                    <ul className="timeline-achievements">
+                      {item.achievements.map((ach, j) => (
+                        <li key={j} className="timeline-achievement">
+                          <FiCheck className="ach-icon" aria-hidden="true" />
+                          <span>{ach}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </motion.div>
             ))}
+          </motion.div>
+
+          {/* Education */}
+          <motion.div
+            className="education-card glass-card"
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={fadeUp}
+          >
+            <div className="education-icon" aria-hidden="true">
+              <FiAward />
+            </div>
+            <div>
+              <h3 className="education-title">B.E. Computer Science</h3>
+              <p className="education-where">JAIN Institute of Technology, Bengaluru</p>
+              <p className="education-meta mono">8.19 CGPA · Graduated 2023</p>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* ── Resume Section ── */}
+        <section className="about-section">
+          <motion.div
+            className="resume-card glass-card"
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={fadeUp}
+            whileHover={{ y: -4, transition: { type: "spring", stiffness: 300, damping: 20 } }}
+          >
+            <div className="resume-card__left">
+              <span className="section-label" style={{ marginBottom: "0.5rem" }}>Resume</span>
+              <h2 className="resume-card__title">Tajammul Khan</h2>
+              <p className="resume-card__sub">Frontend Engineer · React · Next.js · TypeScript</p>
+              <div className="resume-stats">
+                <span className="resume-stat mono">3 Yrs Experience</span>
+                <span className="resume-stat-sep">·</span>
+                <span className="resume-stat mono">React Expert</span>
+                <span className="resume-stat-sep">·</span>
+                <span className="resume-stat mono">Full Stack</span>
+                <span className="resume-stat-sep">·</span>
+                <span className="resume-stat mono">AI Integration</span>
+              </div>
+            </div>
+            <div className="resume-card__actions">
+              <a
+                href="/Tajammul_Khan_Resume.pdf"
+                download="Tajammul_Khan_Resume.pdf"
+                className="btn-primary-pill"
+                aria-label="Download Tajammul Khan's Resume as PDF"
+              >
+                <FiDownload aria-hidden="true" />
+                Download PDF
+              </a>
+              <a
+                href="/Tajammul_Khan_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost-pill"
+                aria-label="View Tajammul Khan's Resume online"
+              >
+                <FiEye aria-hidden="true" />
+                View Online
+              </a>
+            </div>
           </motion.div>
         </section>
 
@@ -151,25 +271,38 @@ export const About = () => {
             viewport={{ once: true, margin: "-60px" }}
             variants={stagger}
           >
-            {skillCategories.map(({ label, items, highlight }) => (
-              <motion.div
-                key={label}
-                className={`skill-card glass-card ${highlight ? "skill-card--learning" : ""}`}
-                variants={fadeUp}
-              >
-                <span className="skill-card__label mono">{label}</span>
-                <div className="skill-pills">
-                  {items.map((skill) => (
+            {techstack.map(({ category, color, items, highlight }) => {
+              const IconComponent = categoryIconMap[category] || FiCode;
+              return (
+                <motion.div
+                  key={category}
+                  className={`skill-card glass-card ${highlight ? "skill-card--learning" : ""}`}
+                  variants={fadeUp}
+                  whileHover={{ y: -4, transition: { type: "spring", stiffness: 300, damping: 22 } }}
+                >
+                  <div className="skill-card__header">
                     <span
-                      key={skill}
-                      className={`skill-pill ${highlight ? "skill-pill--learning" : ""}`}
+                      className="skill-card__icon"
+                      style={{ color }}
+                      aria-hidden="true"
                     >
-                      {skill}
+                      <IconComponent />
                     </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
+                    <span className="skill-card__label mono">{category}</span>
+                  </div>
+                  <div className="skill-pills">
+                    {items.map((skill) => (
+                      <span
+                        key={skill}
+                        className={`skill-pill ${highlight ? "skill-pill--learning" : ""}`}
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </section>
 
@@ -193,7 +326,12 @@ export const About = () => {
             variants={stagger}
           >
             {services.map((svc, i) => (
-              <motion.div key={i} className="service-card glass-card" variants={fadeUp}>
+              <motion.div
+                key={i}
+                className="service-card glass-card"
+                variants={fadeUp}
+                whileHover={{ y: -4, transition: { type: "spring", stiffness: 300, damping: 22 } }}
+              >
                 <span className="service-num mono">0{i + 1}</span>
                 <h3 className="service-title">{svc.title}</h3>
                 <p className="service-desc">{svc.description}</p>
